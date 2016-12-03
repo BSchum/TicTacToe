@@ -1,0 +1,30 @@
+apply plugin: 'application'
+apply plugin: 'jacoco'
+
+sourceCompatibility = 1.8
+
+mainClassName = "connect4.Connect4Controller"
+
+// In this section you declare where to find the dependencies of your project
+repositories {
+    jcenter()
+}
+
+// In this section you declare the dependencies for your production and test code
+dependencies {
+    testCompile 'junit:junit:4.12'
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.1'
+}
+
+run {
+	standardInput = System.in
+}
+
+jar {
+    manifest {
+        attributes("Main-Class": "connect4.Connect4Controller")
+    }
+}
