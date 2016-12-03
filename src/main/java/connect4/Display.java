@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Display implements Observer{
 
-    ArrayList<GameEnvironment> gameEnvironmentObs = new ArrayList<>();
+
     public void Update(Board b){
         System.out.println("  1 2 3 4 5 6 7");
         for(int i = 0; i<6;i++){
@@ -22,6 +22,5 @@ public class Display implements Observer{
         players[1] = new Player();
         GameEnvironment GE = new GameEnvironment(players);
         GE.HowTheGameWorks();
-
     }
 }

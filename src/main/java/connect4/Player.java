@@ -29,6 +29,9 @@ public class Player {
         }
     }
     public boolean Play(Board board, int x){
+        if(board.IsInBoard(x)){
+            board.PutPieceInBoard(this, x);
+        }
         return true;
     }
 }

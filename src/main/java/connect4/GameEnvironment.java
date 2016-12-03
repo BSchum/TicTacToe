@@ -75,7 +75,8 @@ public class GameEnvironment {
     public void HowTheGameWorks(){
         board = new Board();
         AddDisplayObs(new Display());
-        board.PutPieceInBoard(listPlayer[0],4);
+        listPlayer[0].Play(board,1);
+        listPlayer[1].Play(board,1);
         NotifyDisplay();
 
     }
