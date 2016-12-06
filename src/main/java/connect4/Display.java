@@ -3,8 +3,6 @@ package connect4;
 import java.util.ArrayList;
 
 public class Display implements Observer{
-
-
     public void Update(Board b){
         System.out.println("  1 2 3 4 5 6 7");
         for(int i = 0; i<6;i++){

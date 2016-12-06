@@ -6,15 +6,15 @@ import java.util.ArrayList;
  * Created by brice on 24/11/2016.
  */
 public class GameEnvironment {
-    Player[] listPlayer = new Player[2];
-    Board board;
-    ArrayList<Cell> neighboursArray = new ArrayList<>();
-    ArrayList<Observer> displayObs = new ArrayList<>();
+    private Player[] listPlayer = new Player[2];
+    private Board board;
+    private ArrayList<Cell> neighboursArray = new ArrayList<>();
+    private ArrayList<Observer> displayObs = new ArrayList<>();
 
-    public void AddDisplayObs(Display display){
+    private void AddDisplayObs(Display display){
         displayObs.add(display);
     }
-    public void NotifyDisplay(){
+    private void NotifyDisplay(){
         for (Observer a : displayObs) {
             a.Update(board);
         }
@@ -55,7 +55,7 @@ public class GameEnvironment {
     private void VerifyNeighbours(Cell cellule, Direction dir) {
         if(GetNeighboursInDirection(cellule,dir).symbol == cellule.symbol) {
             neighboursArray.add(GetNeighboursInDirection(cellule, dir));
-            VerifyNeighbours(GetNeighboursInDirection(cellule, dir),dir);
+            VerifyNeighbours(GetNeighboursInDirection(cellule, dir), dir);
         }
     }
     private Cell GetNeighboursInDirection(Cell c, Direction dir){
@@ -116,7 +116,7 @@ public class GameEnvironment {
         do{
             NotifyDisplay();
             Saisie saisie = new Saisie();
-            int x =0;
+            int x = 0;
             do{
                 System.out.println("Choisissez un x : Player 1");
                 x = saisie.readInt() - 1;
