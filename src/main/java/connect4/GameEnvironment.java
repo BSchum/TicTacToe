@@ -25,8 +25,23 @@ public class GameEnvironment {
     }
 
     boolean VerifyVictoryCondition(){
-        
-        return true;
+        for(int i = 0;i < 5;i++) {
+            for (int j = 0; j < 6; j++) {
+                for (Direction dir : Direction.values()) {
+                    if (board.GetCase(i, j).symbol != ' ') {
+                        VerifyNeighbours(board.GetCase(i, j), dir);
+                        VerifyNeighbours(board.GetCase(i, j), dir.opposite());
+                        //System.out.println(neighboursArray);
+                        if(neighboursArray.size() >=3){
+                            return true;
+                        }
+
+                    }
+                    neighboursArray.clear();
+                }
+            }
+        }
+        return false;
     }
 
     private boolean VerifyLine(){
@@ -38,34 +53,58 @@ public class GameEnvironment {
     }
 
     private void VerifyNeighbours(Cell cellule, Direction dir) {
-
+        if(GetNeighboursInDirection(cellule,dir).symbol == cellule.symbol) {
+            neighboursArray.add(GetNeighboursInDirection(cellule, dir));
+            VerifyNeighbours(GetNeighboursInDirection(cellule, dir),dir);
+        }
     }
     private Cell GetNeighboursInDirection(Cell c, Direction dir){
         switch (dir){
             case NORTH:
-                return board.GetCase(c.coord.x,c.coord.y-1);
+                if(c.coord.y>0)
+                    return board.GetCase(c.coord.x,c.coord.y-1);
+                else
+                    return new Cell();
 
             case NORTHEAST:
-                return board.GetCase(c.coord.x + 1,c.coord.y -1);
+                if(c.coord.y>0 && c.coord.x < 6)
+                    return board.GetCase(c.coord.x + 1,c.coord.y -1);
+                else
+                {
+                    return new Cell();
+                }
 
             case EAST:
-                return board.GetCase(c.coord.x +1,c.coord.y);
-
+                if(c.coord.x<6)
+                    return board.GetCase(c.coord.x +1,c.coord.y);
+                else
+                    return new Cell();
             case SOUTHEAST:
-                return board.GetCase(c.coord.x+1,c.coord.y+1);
+                if(c.coord.y<5 && c.coord.x < 6)
+                    return board.GetCase(c.coord.x+1,c.coord.y+1);
+                else
+                    return new Cell();
 
             case SOUTH:
-                return board.GetCase(c.coord.x,c.coord.y+1);
-
+                if(c.coord.y<5)
+                    return board.GetCase(c.coord.x,c.coord.y+1);
+                else
+                    return new Cell();
             case SOUTHWEST:
-                return board.GetCase(c.coord.x-1,c.coord.y+1);
-
+                if(c.coord.y<5 && c.coord.x >0)
+                    return board.GetCase(c.coord.x-1,c.coord.y+1);
+                else
+                    return new Cell();
             case WEST:
-                return board.GetCase(c.coord.x-1,c.coord.y);
-
+                if(c.coord.x > 0)
+                    return board.GetCase(c.coord.x-1,c.coord.y);
+                else
+                    return new Cell();
             case NORTHWEST:
-                return board.GetCase(c.coord.x-1,c.coord.y -1);
-
+                if(c.coord.x > 0 && c.coord.y >0)
+                    return board.GetCase(c.coord.x-1,c.coord.y -1);
+                else
+                    return new Cell();
             default://should never happen
                 return new Cell();
         }
@@ -74,11 +113,10 @@ public class GameEnvironment {
     public void HowTheGameWorks(){
         board = new Board();
         AddDisplayObs(new Display());
-        while(VerifyVictoryCondition()){
+        do{
             NotifyDisplay();
             Saisie saisie = new Saisie();
             int x =0;
-
             do{
                 System.out.println("Choisissez un x : Player 1");
                 x = saisie.readInt() - 1;
@@ -87,7 +125,11 @@ public class GameEnvironment {
                     break;//On quitte instantanément la boucle pour par revérifier si la colonne est remplis apres avoir jouer
                 }
             }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
+
             NotifyDisplay();
+            if(VerifyVictoryCondition()){
+                continue;
+            }
             do{
                 System.out.println("Choisissez un x : Player 2");
                 x = saisie.readInt() - 1;
@@ -96,8 +138,12 @@ public class GameEnvironment {
                     break;
                 }
             }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
+        }while(!VerifyVictoryCondition());
+        if(neighboursArray.get(0).symbol == 'X'){
+            System.out.println("Player one won");
         }
-
-
+        else{
+            System.out.println("Player two won");
+        }
     }
 }
