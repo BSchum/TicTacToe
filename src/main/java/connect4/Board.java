@@ -39,14 +39,34 @@ public class Board {
             return true;
         }
     }
+    public boolean ColumnIsFull(int x){
+        int i = 0;
+        int numberOfCasePlayed = 0;
+
+        for (i = 0;i<6;i++){
+            if(vBoard[x][i].symbol == 'X' || vBoard[x][i].symbol == 'O') {
+                numberOfCasePlayed ++;
+            }
+        }
+
+        if(numberOfCasePlayed == 6){
+            return false;
+
+        }
+        else{
+            return true;
+        }
+    }
     public void PutPieceInBoard(Player player,int x){
         int i = 5;
-        while(vBoard[x][i].symbol != ' ' && i>=0){
+        while((vBoard[x][i].symbol != ' ')&&(i>=0)){
             i--;
         }
         if(i>=0){
             vBoard[x][i].SetSymbol(player.getPieceForm());
+
         }
+
     }
     public Cell GetCase(int x,int y){
         return vBoard[x][y];

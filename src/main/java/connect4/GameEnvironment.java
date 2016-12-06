@@ -1,7 +1,6 @@
 package connect4;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by brice on 24/11/2016.
@@ -26,7 +25,7 @@ public class GameEnvironment {
     }
 
     boolean VerifyVictoryCondition(){
-
+        
         return true;
     }
 
@@ -75,9 +74,30 @@ public class GameEnvironment {
     public void HowTheGameWorks(){
         board = new Board();
         AddDisplayObs(new Display());
-        listPlayer[0].Play(board,1);
-        listPlayer[1].Play(board,1);
-        NotifyDisplay();
+        while(VerifyVictoryCondition()){
+            NotifyDisplay();
+            Saisie saisie = new Saisie();
+            int x =0;
+
+            do{
+                System.out.println("Choisissez un x : Player 1");
+                x = saisie.readInt() - 1;
+                if (board.IsInBoard(x) && board.ColumnIsFull(x)){
+                    listPlayer[0].Play(board, x);
+                    break;//On quitte instantanément la boucle pour par revérifier si la colonne est remplis apres avoir jouer
+                }
+            }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
+            NotifyDisplay();
+            do{
+                System.out.println("Choisissez un x : Player 2");
+                x = saisie.readInt() - 1;
+                if (board.IsInBoard(x) && board.ColumnIsFull(x)){
+                    listPlayer[1].Play(board, x);
+                    break;
+                }
+            }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
+        }
+
 
     }
 }
