@@ -25,13 +25,20 @@ public class GameEnvironment {
     }
 
     boolean VerifyVictoryCondition(){
+        boolean won = VerifyIfPlayerWin();
+        if(!won){
+            won = VerifyIfFull();
+        }
+        return won;
+    }
+
+    private boolean VerifyIfPlayerWin() {
         for(int i = 0;i < 5;i++) {
             for (int j = 0; j < 6; j++) {
                 for (Direction dir : Direction.values()) {
                     if (board.GetCase(i, j).symbol != ' ') {
                         VerifyNeighbours(board.GetCase(i, j), dir);
                         VerifyNeighbours(board.GetCase(i, j), dir.opposite());
-                        //System.out.println(neighboursArray);
                         if(neighboursArray.size() >=3){
                             return true;
                         }
@@ -44,14 +51,23 @@ public class GameEnvironment {
         return false;
     }
 
-    private boolean VerifyLine(){
-        return true;
+    private boolean VerifyIfFull() {
+        int numberOfPiece = 0;
+        for (int i =0;i<7;i++){
+            for (int j =0;j<6;j++){
+                if(board.GetCase(i,j).symbol != ' '){
+                    numberOfPiece++;
+                }
+            }
+        }
+        System.out.println(numberOfPiece);
+        if(numberOfPiece == (6*7)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
-
-    private boolean VerifyCollumn(){
-        return true;
-    }
-
     private void VerifyNeighbours(Cell cellule, Direction dir) {
         if(GetNeighboursInDirection(cellule,dir).symbol == cellule.symbol) {
             neighboursArray.add(GetNeighboursInDirection(cellule, dir));
@@ -110,40 +126,38 @@ public class GameEnvironment {
         }
 
     }
+    public void ChooseYourPlay(int player){
+        int x = 0;
+        do{
+            Saisie saisie = new Saisie();
+            System.out.println("Choisissez un x : Player "+(player+1));
+            x = saisie.readInt() - 1;
+            if (board.IsInBoard(x) && board.ColumnIsFull(x)){
+                listPlayer[player].Play(board, x);
+                break;//On quitte instantanément la boucle pour par revérifier si la colonne est remplis apres avoir jouer
+            }
+        }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
+    }
     public void HowTheGameWorks(){
         board = new Board();
         AddDisplayObs(new Display());
         do{
             NotifyDisplay();
-            Saisie saisie = new Saisie();
-            int x = 0;
-            do{
-                System.out.println("Choisissez un x : Player 1");
-                x = saisie.readInt() - 1;
-                if (board.IsInBoard(x) && board.ColumnIsFull(x)){
-                    listPlayer[0].Play(board, x);
-                    break;//On quitte instantanément la boucle pour par revérifier si la colonne est remplis apres avoir jouer
-                }
-            }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
-
+            ChooseYourPlay(0);
             NotifyDisplay();
             if(VerifyVictoryCondition()){
                 continue;
             }
-            do{
-                System.out.println("Choisissez un x : Player 2");
-                x = saisie.readInt() - 1;
-                if (board.IsInBoard(x) && board.ColumnIsFull(x)){
-                    listPlayer[1].Play(board, x);
-                    break;
-                }
-            }while(!board.IsInBoard(x) || !board.ColumnIsFull(x));
+            ChooseYourPlay(1);
         }while(!VerifyVictoryCondition());
-        if(neighboursArray.get(0).symbol == 'X'){
-            System.out.println("Player one won");
+        if(neighboursArray.size() == 0){
+            System.out.println("Match");
+        }
+        else if(neighboursArray.get(0).symbol == 'X'){
+            System.out.println("Player 1 won");
         }
         else{
-            System.out.println("Player two won");
+            System.out.println("Player 2 won");
         }
     }
 }
